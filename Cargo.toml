@@ -1,6 +1,11 @@
 [package]
-name = "arduino"
+name = "prustio-arduino"
 version = "0.1.0"
 edition = "2024"
+links="prustio_arduino"
 
-[dependencies]
+include = [
+    "src/*",
+    "pio_src/*",
+    "build.rs",
+]
