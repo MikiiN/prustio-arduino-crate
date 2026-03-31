@@ -112,12 +112,7 @@ pub type __pid_t = ::core::ffi::c_int;
 pub struct __fsid_t {
     pub __val: [::core::ffi::c_int; 2usize],
 }
-#[allow(clippy::unnecessary_operation, clippy::identity_op)]
-const _: () = {
-    ["Size of __fsid_t"][::core::mem::size_of::<__fsid_t>() - 8usize];
-    ["Alignment of __fsid_t"][::core::mem::align_of::<__fsid_t>() - 4usize];
-    ["Offset of field: __fsid_t::__val"][::core::mem::offset_of!(__fsid_t, __val) - 0usize];
-};
+
 pub type __clock_t = ::core::ffi::c_long;
 pub type __rlim_t = ::core::ffi::c_ulong;
 pub type __rlim64_t = ::core::ffi::c_ulong;

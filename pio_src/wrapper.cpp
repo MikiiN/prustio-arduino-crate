@@ -99,3 +99,14 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+// ==============================================================================
+// DUMMY FUNCTIONS TO SATISFY PLATFORMIO
+// ==============================================================================
+// PlatformIO requires these to successfully link its temporary firmware.elf.
+// Because the final Rust application defines its own `main()` function, 
+// the Rust linker will completely ignore Arduino's main.cpp, and these 
+// dummy functions will be automatically stripped out of the final firmware!
+
+void setup() {}
+void loop() {}
