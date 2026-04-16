@@ -64,7 +64,7 @@ impl Pin {
     pub const fn new(pin: u8) -> Self { Self(pin) }
 }
 
-pub fn mode(pin: &Pin, mode: PinMode) {
+pub fn pin_mode(pin: &Pin, mode: PinMode) {
     unsafe { ffi::c_pin_mode(pin.0, mode as u8) }
 }
 
