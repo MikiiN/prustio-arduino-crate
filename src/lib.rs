@@ -85,8 +85,11 @@ pub fn analog_read(pin: &Pin) -> i32 {
     unsafe { ffi::c_analog_read(pin.0) as i32 }
 }
 
-pub fn tone(pin: &Pin, frequency: u32, duration_ms: u32) {
-    unsafe { ffi::c_tone(pin.0, frequency as c_uint, duration_ms as c_ulong) }
+pub fn tone(pin: &Pin, frequency: u32, duration_ms: Option<u32>) {
+    match duration_ms {
+        Some(dur) => unsafe { ffi::c_tone(pin.0, frequency as c_uint, dur as c_ulong) },
+        None => unsafe { ffi::c_tone(pin.0, frequency as c_uint, 0 as c_ulong) }
+    } 
 }
 
 pub fn no_tone(pin: &Pin) {
