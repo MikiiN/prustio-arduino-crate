@@ -276,16 +276,10 @@ unsafe extern "C" {
     pub fn c_serial_write_buffer(buf: *const u8, len: usize) -> usize;
 }
 unsafe extern "C" {
-    pub fn c_serial_print_str(str_: *const ::core::ffi::c_char) -> usize;
+    pub fn c_serial_print(str_: *const ::core::ffi::c_char) -> usize;
 }
 unsafe extern "C" {
-    pub fn c_serial_println_str(str_: *const ::core::ffi::c_char) -> usize;
-}
-unsafe extern "C" {
-    pub fn c_serial_print_int(val: ::core::ffi::c_int) -> usize;
-}
-unsafe extern "C" {
-    pub fn c_serial_println_int(val: ::core::ffi::c_int) -> usize;
+    pub fn c_serial_println(str_: *const ::core::ffi::c_char) -> usize;
 }
 unsafe extern "C" {
     pub fn c_wire_begin();
