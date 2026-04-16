@@ -164,7 +164,8 @@ impl fmt::Write for StackString {
     }
 }
 
-macro_rules! format_stack {
+#[macro_export]
+macro_rules! format_str {
     ($($arg:tt)*) => {{
         let mut s = StackString::new();
         let _ = core::fmt::write(&mut s, core::format_args!($($arg)*));
