@@ -1,6 +1,7 @@
 #![no_std]
 
 use core::ffi::{c_int, c_long, c_uint, c_ulong, CStr};
+use core::fmt;
 
 mod ffi {
     #![allow(non_upper_case_globals)]
@@ -128,4 +129,45 @@ pub fn shift_in(data_pin: &Pin, clock_pin: &Pin, bit_order: BitOrder) -> u8 {
 
 pub fn pulse_in(pin: &Pin, state: PinState, timeout_us: u32) -> u32 {
     unsafe { ffi::c_pulse_in(pin.0, state as u8, timeout_us as c_ulong) as u32 }
+}
+
+// --- Utils ---
+
+// struct that holds str buffer and tracks how much we've written
+pub struct StackString {
+    buf: [u8; 255],
+    len: usize,
+}
+
+impl StackString {
+    pub fn new() -> Self {
+        Self { buf: [0; 255], len: 0 }
+    }
+    
+    // converts buffer into a standard Rust &str
+    pub fn as_str(&self) -> &str {
+        unsafe { core::str::from_utf8_unchecked(&self.buf[..self.len]) }
+    }
+}
+
+// format text into StackString
+impl fmt::Write for StackString {
+    fn write_str(&mut self, s: &str) -> fmt::Result {
+        let bytes = s.as_bytes();
+        let available = self.buf.len() - self.len;
+        let to_copy = bytes.len().min(available);
+        
+        self.buf[self.len .. self.len + to_copy].copy_from_slice(&bytes[..to_copy]);
+        self.len += to_copy;
+        
+        Ok(())
+    }
+}
+
+macro_rules! format_stack {
+    ($($arg:tt)*) => {{
+        let mut s = StackString::new();
+        let _ = core::fmt::write(&mut s, core::format_args!($($arg)*));
+        s // return the struct
+    }};
 }
