@@ -36,11 +36,31 @@ impl Serial {
         unsafe { ffi::c_serial_write_buffer(data.as_ptr(), data.len() as usize) as usize }
     }
 
-    pub fn print(&self, s: &CStr) -> usize {
-        unsafe { ffi::c_serial_print(s.as_ptr()) as usize }
+    pub fn print(&self, s: &str) -> usize {
+        // max message size 255
+        let mut buffer = [0u8; 256]; 
+        
+        let bytes = s.as_bytes();
+        
+        // copy message and add \0 char
+        let len = bytes.len().min(255);
+        buffer[..len].copy_from_slice(&bytes[..len]);
+        buffer[len] = 0; 
+
+        unsafe { ffi::c_serial_print(buffer.as_ptr() as *const _) as usize }
     }
 
-    pub fn println(&self, s: &CStr) -> usize {
-        unsafe { ffi::c_serial_println(s.as_ptr()) as usize }
+    pub fn println(&self, s: &str) -> usize {
+        // max message size 255
+        let mut buffer = [0u8; 256]; 
+        
+        let bytes = s.as_bytes();
+        
+        // copy message and add 0 char
+        let len = bytes.len().min(255);
+        buffer[..len].copy_from_slice(&bytes[..len]);
+        buffer[len] = 0; 
+
+        unsafe { ffi::c_serial_println(buffer.as_ptr() as *const _) as usize }
     }
 }
