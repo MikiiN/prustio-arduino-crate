@@ -150,10 +150,10 @@ impl StackString {
     }
 }
 
-// Teach ufmt how to write into our buffer
 impl uWrite for StackString {
     type Error = Infallible;
-
+    
+    // write into buffer
     fn write_str(&mut self, s: &str) -> Result<(), Self::Error> {
         let bytes = s.as_bytes();
         let available = self.buf.len() - self.len;
