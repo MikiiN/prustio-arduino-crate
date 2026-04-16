@@ -1,7 +1,8 @@
 #![no_std]
 
-use core::ffi::{c_int, c_long, c_uint, c_ulong, CStr};
-use core::fmt;
+use core::ffi::{c_int, c_long, c_uint, c_ulong};
+use ufmt::uWrite;
+use core::convert::Infallible;
 
 mod ffi {
     #![allow(non_upper_case_globals)]
@@ -144,15 +145,16 @@ impl StackString {
         Self { buf: [0; 255], len: 0 }
     }
     
-    // converts buffer into a standard Rust &str
     pub fn as_str(&self) -> &str {
         unsafe { core::str::from_utf8_unchecked(&self.buf[..self.len]) }
     }
 }
 
-// format text into StackString
-impl fmt::Write for StackString {
-    fn write_str(&mut self, s: &str) -> fmt::Result {
+// Teach ufmt how to write into our buffer
+impl uWrite for StackString {
+    type Error = Infallible;
+
+    fn write_str(&mut self, s: &str) -> Result<(), Self::Error> {
         let bytes = s.as_bytes();
         let available = self.buf.len() - self.len;
         let to_copy = bytes.len().min(available);
@@ -168,7 +170,7 @@ impl fmt::Write for StackString {
 macro_rules! format_str {
     ($($arg:tt)*) => {{
         let mut s = StackString::new();
-        let _ = core::fmt::write(&mut s, core::format_args!($($arg)*));
-        s // return the struct
+        let _ = ufmt::uwrite!(&mut s, $($arg)*); 
+        s 
     }};
 }

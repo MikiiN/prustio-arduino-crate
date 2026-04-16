@@ -9,3 +9,6 @@ include = [
     "pio_src/*",
     "build.rs",
 ]
+
+[dependencies]
+ufmt = "0.2.0"
