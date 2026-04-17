@@ -1,5 +1,44 @@
 use super::*;
 
+pub trait Printable {
+    fn print_to(&self, serial: &Serial);
+}
+
+impl Printable for &str {
+    fn print_to(&self, serial: &Serial) {
+        for byte in self.bytes() {
+            serial.write(byte);
+        }
+    }
+}
+
+impl Printable for u8 {
+    fn print_to(&self, serial: &Serial) {
+        let mut val = *self;
+        
+        let mut hundreds = 0;
+        while val >= 100 { hundreds += 1; val -= 100; }
+        
+        let mut tens = 0;
+        while val >= 10 { tens += 1; val -= 10; }
+        
+        let ones = val;
+
+        let mut print_started = false;
+        
+        if hundreds > 0 {
+            serial.write(b'0' + hundreds);
+            print_started = true;
+        }
+        
+        if print_started || tens > 0 {
+            serial.write(b'0' + tens);
+        }
+        
+        serial.write(b'0' + ones);
+    }
+}
+
 pub struct Serial {}
 
 impl Serial {
@@ -36,31 +75,12 @@ impl Serial {
         unsafe { ffi::c_serial_write_buffer(data.as_ptr(), data.len() as usize) as usize }
     }
 
-    pub fn print(&self, s: &str) -> usize {
-        // max message size 255
-        let mut buffer = [0u8; 256]; 
-        
-        let bytes = s.as_bytes();
-        
-        // copy message and add \0 char
-        let len = bytes.len().min(255);
-        buffer[..len].copy_from_slice(&bytes[..len]);
-        buffer[len] = 0; 
-
-        unsafe { ffi::c_serial_print(buffer.as_ptr() as *const _) as usize }
+    pub fn print<T: Printable>(&self, val: T) {
+        val.print_to(self);
     }
 
-    pub fn println(&self, s: &str) -> usize {
-        // max message size 255
-        let mut buffer = [0u8; 256]; 
-        
-        let bytes = s.as_bytes();
-        
-        // copy message and add 0 char
-        let len = bytes.len().min(255);
-        buffer[..len].copy_from_slice(&bytes[..len]);
-        buffer[len] = 0; 
-
-        unsafe { ffi::c_serial_println(buffer.as_ptr() as *const _) as usize }
+    pub fn println<T: Printable>(&self, val: T) {
+        val.print_to(self);
+        self.print("\n");
     }
 }
