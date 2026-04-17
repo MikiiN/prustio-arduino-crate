@@ -1,8 +1,6 @@
 #![no_std]
 
 use core::ffi::{c_int, c_long, c_uint, c_ulong};
-use ufmt::uWrite;
-use core::convert::Infallible;
 
 mod ffi {
     #![allow(non_upper_case_globals)]

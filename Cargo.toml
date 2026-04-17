@@ -11,4 +11,3 @@ include = [
 ]
 
 [dependencies]
-ufmt = "0.2.0"
