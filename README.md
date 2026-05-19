@@ -4,7 +4,8 @@ This is the library crate for using the Arduino framework within [pRustIO](https
 
 It provides a safe Rust interface that wraps parts of the underlying Arduino C++ framework. By using `#[no_std]` and Foreign Function Interface (FFI) bindings, this crate bridges the gap between Rust and Arduino's core libraries.
 
-[!NOTE] This crate is not designed to be usable alone. The embedded application itself must handle the entire compilation and linking process for the Arduino framework. It relies on pRustIO's build tools to compile the C/C++ dependencies correctly. But if you want it to use as a standalone crate, the build script exposes location of the C++ wrapper header and source files using variable `pio_source_path`, so you can use it in yours project build script. 
+[!NOTE] 
+This crate is not designed to be usable alone. The embedded application itself must handle the entire compilation and linking process for the Arduino framework. It relies on pRustIO's build tools to compile the C/C++ dependencies correctly. But if you want it to use as a standalone crate, the build script exposes location of the C++ wrapper header and source files using variable `pio_source_path`, so you can use it in yours project build script. 
 
 ## Available Modules and Features
 
